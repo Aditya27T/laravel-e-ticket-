@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\AdminCheck;
+use App\Http\Middleware\UserCheck;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TransactionController;
@@ -22,9 +24,17 @@ Route::post('login', [AuthController::class, 'login']);
 
 
 Route::middleware(['auth:sanctum'])->group(function () {
+
+    Route::middleware([AdminCheck::class])->group(function () {
+        Route::resource('tickets', TicketController::class, ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
+        Route::resource('transactions', TransactionController::class, ['only' => ['index', 'update', 'destroy']]);
+    });
+
+    Route::middleware([UserCheck::class])->group(function () {
+        Route::resource('transactions', TransactionController::class, ['only' => ['show', 'store']]);
+    });
+    
+    //public
+    Route::resource('tickets', TicketController::class, ['only' => ['index']]);
     Route::post('logout', [AuthController::class, 'logout']);
-    
-    Route::resource('tickets', TicketController::class, ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
-    
-    Route::resource('transactions', TransactionController::class, ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
 });

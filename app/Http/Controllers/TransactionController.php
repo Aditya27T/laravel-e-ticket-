@@ -94,7 +94,7 @@ class TransactionController extends Controller
      */
     public function show($id)
     {
-        $transaction = Transaction::with('ticket')->find($id);
+        $transaction = Transaction::find($id);
 
         if ($transaction) {
             return response()->json([
