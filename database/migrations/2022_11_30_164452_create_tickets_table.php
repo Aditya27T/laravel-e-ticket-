@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
+            $table->string('concert_name');
+            $table->string('concert_date');
+            $table->string('concert_category');
+            $table->BigInteger('concert_price');
+            $table->BigInteger('stock');
             $table->timestamps();
         });
     }
